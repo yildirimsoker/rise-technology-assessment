@@ -1,0 +1,40 @@
+version: '3.4'
+
+services:
+  risetechnology.api:
+    image: ${DOCKER_REGISTRY-}risetechnologyapi
+    container_name: risetechnology.api
+    build:
+      context: .
+      dockerfile: RiseTechnology.API/Dockerfile
+
+  risetechnology.workerservice:
+    image: ${DOCKER_REGISTRY-}risetechnologyworkerservice
+    container_name: risetechnology.workerservice
+    build:
+      context: .
+      dockerfile: RiseTechnology.WorkerService/Dockerfile
+
+  sqldata:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: risetechnology.mssql
+    environment:
+      - SA_PASSWORD=1Secure*Password1
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Enterprise
+    ports:
+      - "1438:1433"
+
+  rabbitmq: # login guest:guest
+    image: rabbitmq:3-management
+    container_name: risetechnology.rabbitmq
+    hostname: "rabbitmq"
+    labels:
+      NAME: "rabbitmq"
+    ports:
+    - "4369:4369"
+    - "5671:5671"
+    - "5672:5672"
+    - "25672:25672"
+    - "15671:15671"
+    - "15672:15672"
